@@ -17,8 +17,11 @@
 extern crate cgmath;
 extern crate mint;
 
-pub use poly::{EmitLines, Line, Lines, MapToVertices, MapVertex, Polygon, Quad, Triangle,
-               Vertices, VerticesIterator};
+pub use poly::{Line, Polygon, Quad, Triangle, NGon,
+               EmitLines, Lines,
+               MapToVertices, MapVertex,
+               Vertices, VerticesIterator
+};
 
 pub use triangulate::{EmitTriangles, Triangulate, TriangulateIterator};
 

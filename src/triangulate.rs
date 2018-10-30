@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 
-use Polygon::{PolyQuad, PolyTri};
-use {Polygon, Quad, Triangle};
+use Polygon::{PolyQuad, PolyTri, PolyNGon};
+use {Polygon, Quad, Triangle, NGon};
 
 /// provides a way to convert a polygon down to triangles
 pub trait EmitTriangles {
@@ -18,6 +18,7 @@ pub trait EmitTriangles {
 impl<T: Clone> EmitTriangles for Quad<T> {
     type Vertex = T;
 
+    /// triangulates a quad
     fn emit_triangles<F>(&self, mut emit: F)
     where
         F: FnMut(Triangle<T>),
@@ -36,6 +37,7 @@ impl<T: Clone> EmitTriangles for Quad<T> {
 impl<T: Clone> EmitTriangles for Triangle<T> {
     type Vertex = T;
 
+    /// triangulates a triangle
     fn emit_triangles<F>(&self, mut emit: F)
     where
         F: FnMut(Triangle<T>),
@@ -44,9 +46,32 @@ impl<T: Clone> EmitTriangles for Triangle<T> {
     }
 }
 
+impl<T: Clone> EmitTriangles for NGon<T> {
+    type Vertex = T;
+
+    /// triangulates a convex n-sided polygon
+    fn emit_triangles<F>(&self, mut emit: F)
+    where
+        F: FnMut(Triangle<T>),
+    {
+        debug_assert!(self.verts.len() >= 3);
+
+        let mut v_iter = self.verts.iter();
+        if let Some(start) = v_iter.next() {
+            if let Some(mut recent) = v_iter.next() {
+                while let Some(vert) = v_iter.next() {
+                    emit(Triangle::new(start.clone(), recent.clone(), vert.clone()));
+                    recent = vert;
+                }
+            }
+        }
+    }
+}
+
 impl<T: Clone> EmitTriangles for Polygon<T> {
     type Vertex = T;
 
+    /// triangulation, generic over polygon types
     fn emit_triangles<F>(&self, emit: F)
     where
         F: FnMut(Triangle<T>),
@@ -54,6 +79,7 @@ impl<T: Clone> EmitTriangles for Polygon<T> {
         match self {
             &PolyTri(ref t) => t.emit_triangles(emit),
             &PolyQuad(ref q) => q.emit_triangles(emit),
+            &PolyNGon(ref n) => n.emit_triangles(emit),
         }
     }
 }

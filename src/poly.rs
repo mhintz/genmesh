@@ -1,8 +1,24 @@
 use std::collections::VecDeque;
 use std::marker::PhantomData;
 
+/// Represents a line
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub struct Line<T> {
+    /// the first point
+    pub x: T,
+    /// The second point
+    pub y: T,
+}
+
+impl<T> Line<T> {
+    /// Create a new line using point x and y
+    pub fn new(x: T, y: T) -> Self {
+        Line { x: x, y: y }
+    }
+}
+
 /// A polygon with 4 points. Maps to `GL_QUADS`
-#[derive(Clone, Debug, PartialEq, Eq, Copy)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Quad<T> {
     /// the first point of a quad
     pub x: T,
@@ -27,7 +43,7 @@ impl<T> Quad<T> {
 }
 
 /// A polygon with 3 points. Maps to `GL_TRIANGLE`
-#[derive(Clone, Debug, PartialEq, Eq, Copy)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Triangle<T> {
     /// the first point of a triangle
     pub x: T,
@@ -48,14 +64,37 @@ impl<T> Triangle<T> {
     }
 }
 
+/// An arbitrary-length polygon
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct NGon<T> {
+    /// the list of vertices of the polygon
+    pub verts: VecDeque<T>,
+}
+
+impl<T> NGon<T> {
+    /// create a new, empty `NGon` polygon
+    pub fn new() -> Self {
+        NGon {
+            verts: VecDeque::new(),
+        }
+    }
+
+    /// add a vertex to the NGon
+    pub fn add_vertex(&mut self, vert: T) {
+        self.verts.push_back(vert);
+    }
+}
+
 /// This is All-the-types container. This exists since some generators
 /// produce both `Triangles` and `Quads`.
-#[derive(Debug, Clone, PartialEq, Copy)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Polygon<T> {
     /// A wraped triangle
     PolyTri(Triangle<T>),
     /// A wraped quad
     PolyQuad(Quad<T>),
+    /// A wrapped arbitrary-length polygon
+    PolyNGon(NGon<T>),
 }
 
 /// The core mechanism of `Vertices` trait. This is a mechanism for unwraping
@@ -105,16 +144,28 @@ impl<T> EmitVertices<T> for Quad<T> {
     }
 }
 
+impl <T> EmitVertices<T> for NGon<T> {
+    fn emit_vertices<F>(self, mut emit: F)
+    where
+        F: FnMut(T),
+    {
+        for v in self.verts {
+            emit(v);
+        }
+    }
+}
+
 impl<T> EmitVertices<T> for Polygon<T> {
     fn emit_vertices<F>(self, emit: F)
     where
         F: FnMut(T),
     {
-        use self::Polygon::{PolyQuad, PolyTri};
+        use self::Polygon::{PolyQuad, PolyTri, PolyNGon};
 
         match self {
             PolyTri(p) => p.emit_vertices(emit),
             PolyQuad(p) => p.emit_vertices(emit),
+            PolyNGon(p) => p.emit_vertices(emit),
         }
     }
 }
@@ -220,6 +271,21 @@ impl<T: Clone, U> MapVertex<T, U> for Quad<T> {
     }
 }
 
+impl<T: Clone, U> MapVertex<T, U> for NGon<T> {
+    type Output = NGon<U>;
+
+    fn map_vertex<F>(self, mut map: F) -> NGon<U>
+    where
+        F: FnMut(T) -> U,
+    {
+        let mut result = NGon::new();
+        for vert in self.verts {
+            result.add_vertex(map(vert));
+        }
+        result
+    }
+}
+
 impl<T: Clone, U> MapVertex<T, U> for Polygon<T> {
     type Output = Polygon<U>;
 
@@ -227,11 +293,12 @@ impl<T: Clone, U> MapVertex<T, U> for Polygon<T> {
     where
         F: FnMut(T) -> U,
     {
-        use self::Polygon::{PolyQuad, PolyTri};
+        use self::Polygon::{PolyQuad, PolyTri, PolyNGon};
 
         match self {
             PolyTri(p) => PolyTri(p.map_vertex(map)),
             PolyQuad(p) => PolyQuad(p.map_vertex(map)),
+            PolyNGon(p) => PolyNGon(p.map_vertex(map)),
         }
     }
 }
@@ -296,22 +363,6 @@ impl<
     }
 }
 
-/// Represents a line
-#[derive(Clone, Debug, PartialEq, Eq, Copy, Hash)]
-pub struct Line<T> {
-    /// the first point
-    pub x: T,
-    /// The second point
-    pub y: T,
-}
-
-impl<T> Line<T> {
-    /// Create a new line using point x and y
-    pub fn new(x: T, y: T) -> Self {
-        Line { x: x, y: y }
-    }
-}
-
 /// Convert a Polygon into it's fragments
 pub trait EmitLines {
     /// The Vertex defines the corners of a Polygon
@@ -352,6 +403,24 @@ impl<T: Clone> EmitLines for Quad<T> {
     }
 }
 
+impl<T: Clone> EmitLines for NGon<T> {
+    type Vertex = T;
+
+    fn emit_lines<E>(self, mut emit: E)
+    where
+        E: FnMut(Line<T>),
+    {
+        debug_assert!(self.verts.len() >= 2);
+        let mut iter = self.verts.iter();
+        if let Some(mut start) = iter.next() {
+            for end in iter {
+                emit(Line::new(start.clone(), end.clone()));
+                start = end;
+            }
+        }
+    }
+}
+
 impl<T: Clone> EmitLines for Polygon<T> {
     type Vertex = T;
 
@@ -359,9 +428,12 @@ impl<T: Clone> EmitLines for Polygon<T> {
     where
         E: FnMut(Line<T>),
     {
+        use self::Polygon::{PolyQuad, PolyTri, PolyNGon};
+
         match self {
-            Polygon::PolyTri(x) => x.emit_lines(emit),
-            Polygon::PolyQuad(x) => x.emit_lines(emit),
+            PolyTri(x) => x.emit_lines(emit),
+            PolyQuad(x) => x.emit_lines(emit),
+            PolyNGon(x) => x.emit_lines(emit),
         }
     }
 }

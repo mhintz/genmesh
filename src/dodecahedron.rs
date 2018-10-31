@@ -1,37 +1,37 @@
-use cgmath::{InnerSpace, Vector3};
+use cgmath::{Vector3, InnerSpace};
 
 use generators::{IndexedPolygon, SharedVertex};
 use {NGon, Vertex};
 
-const PHI = 1.618033988749895; // (5 ^ 0.5 + 1) * 0.5
-const CONJPHI = 0.6180339887498948; // 1 / PHI
+const PHI: f32 = 1.618033988749895; // (5 ^ 0.5 + 1) * 0.5
+const CONJPHI: f32 = 0.6180339887498948; // 1 / PHI
 
 // 20 vertices
 const VERTICES: [[f32; 3]; 20] = [
-  [-conjphi, -phi, 0], // v1
-  [conjphi, -phi, 0], // v2
-  [1, -1, 1], // v3
-  [0, -conjphi, phi], // v4
-  [-1, -1, 1], // v5
-  [-phi, 0, conjphi], // v6
-  [-1, -1, -1], // v7
-  [1, -1, -1], // v8
-  [phi, 0, conjphi], // v9
-  [0, conjphi, phi], // v10
-  [-1, 1, 1], // v11
-  [-phi, 0, -conjphi], // v12
-  [0, -conjphi, -phi], // v13
-  [phi, 0, -conjphi], // v14
-  [1, 1, 1], // v15
-  [conjphi, phi, 0], // v16
-  [-conjphi, phi, 0], // v17
-  [-1, 1, -1], // v18
-  [0, conjphi, -phi], // v19
-  [1, 1, -1], // v20
+  [-CONJPHI, -PHI, 0.], // v1
+  [CONJPHI, -PHI, 0.], // v2
+  [1., -1., 1.], // v3
+  [0., -CONJPHI, PHI], // v4
+  [-1., -1., 1.], // v5
+  [-PHI, 0., CONJPHI], // v6
+  [-1., -1., -1.], // v7
+  [1., -1., -1.], // v8
+  [PHI, 0., CONJPHI], // v9
+  [0., CONJPHI, PHI], // v10
+  [-1., 1., 1.], // v11.
+  [-PHI, 0., -CONJPHI], // v12
+  [0., -CONJPHI, -PHI], // v13
+  [PHI, 0., -CONJPHI], // v14
+  [1., 1., 1.], // v15
+  [CONJPHI, PHI, 0.], // v16
+  [-CONJPHI, PHI, 0.], // v17
+  [-1., 1., -1.], // v18
+  [0., CONJPHI, -PHI], // v19
+  [1., 1., -1.], // v20
 ];
 
 // 12 pentagonal faces
-const FACES: [[f32; 5]; 12] = [
+const FACES: [[usize; 5]; 12] = [
     [0, 1, 2, 3, 4],
     [1, 0, 6, 12, 7],
     [2, 1, 7, 13, 8],
@@ -46,7 +46,81 @@ const FACES: [[f32; 5]; 12] = [
     [15, 19, 18, 17, 16]
 ];
 
+/// Platonic dodecahedron, made of pentagons
 pub struct Dodecahedron {
-    
+    i: usize,
+}
+
+impl Dodecahedron {
+    /// Create a unit Dodecahedron
+    pub fn new() -> Self {
+        Self {
+            i: 0,
+        }
+    }
+
+    fn vert(&self, index: usize) -> Vertex {
+        let position: Vector3<f32> = VERTICES[index].into();
+        let normal: Vector3<f32> = position.normalize();
+        Vertex {
+            pos: position.into(),
+            normal: normal.into(),
+        }
+    }
+}
+
+impl Iterator for Dodecahedron {
+    type Item = NGon<Vertex>;
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (FACES.len(), Some(FACES.len()))
+    }
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.i == FACES.len() {
+            return None;
+        }
+
+        let mut result = NGon::new();
+
+        let face = FACES[self.i];
+        result.add_vertex(self.vert(face[0]));
+        result.add_vertex(self.vert(face[1]));
+        result.add_vertex(self.vert(face[2]));
+        result.add_vertex(self.vert(face[3]));
+        result.add_vertex(self.vert(face[4]));
+        self.i += 1;
+
+        Some(result)
+    }
+}
+
+impl SharedVertex<Vertex> for Dodecahedron {
+    fn shared_vertex_count(&self) -> usize {
+        VERTICES.len()
+    }
+
+    fn shared_vertex(&self, idx: usize) -> Vertex {
+        self.vert(idx)
+    }
+}
+
+impl IndexedPolygon<NGon<usize>> for Dodecahedron {
+    fn indexed_polygon_count(&self) -> usize {
+        FACES.len()
+    }
+
+    fn indexed_polygon(&self, idx: usize) -> NGon<usize> {
+        let mut result = NGon::new();
+
+        let face = FACES[idx];
+        result.add_vertex(face[0]);
+        result.add_vertex(face[1]);
+        result.add_vertex(face[2]);
+        result.add_vertex(face[3]);
+        result.add_vertex(face[4]);
+
+        result
+    }
 }
 

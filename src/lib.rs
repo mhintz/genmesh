@@ -43,6 +43,7 @@ mod icosphere;
 mod plane;
 mod sphere;
 mod torus;
+mod dodecahedron;
 
 /// A collection of utilties that can be used to build
 /// meshes programmatically.
@@ -56,6 +57,7 @@ pub mod generators {
     pub use plane::Plane;
     pub use sphere::SphereUv;
     pub use torus::Torus;
+    pub use dodecahedron::Dodecahedron;
 }
 
 /// Common vertex position type.

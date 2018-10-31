@@ -60,8 +60,9 @@ impl Dodecahedron {
     }
 
     fn vert(&self, index: usize) -> Vertex {
-        let position: Vector3<f32> = VERTICES[index].into();
-        let normal: Vector3<f32> = position.normalize();
+        let un_normalized: Vector3<f32> = VERTICES[index].into();
+        let position = un_normalized.normalize();
+        let normal = position;
         Vertex {
             pos: position.into(),
             normal: normal.into(),

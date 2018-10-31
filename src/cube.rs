@@ -1,3 +1,5 @@
+use cgmath::{Vector3, InnerSpace};
+
 use super::generators::{IndexedPolygon, SharedVertex};
 use super::{MapVertex, Quad};
 use std::ops::Range;
@@ -19,7 +21,8 @@ impl Cube {
         let x = if idx & 4 == 4 { 1. } else { -1. };
         let y = if idx & 2 == 2 { 1. } else { -1. };
         let z = if idx & 1 == 1 { 1. } else { -1. };
-        [x, y, z].into()
+        let result: Vector3<f32> = [x, y, z].into();
+        result.normalize().into()
     }
 
     fn face_indexed(&self, idx: usize) -> (Normal, Quad<usize>) {

@@ -44,6 +44,7 @@ mod plane;
 mod sphere;
 mod torus;
 mod dodecahedron;
+mod tetrahedron;
 
 /// A collection of utilties that can be used to build
 /// meshes programmatically.
@@ -58,6 +59,7 @@ pub mod generators {
     pub use sphere::SphereUv;
     pub use torus::Torus;
     pub use dodecahedron::Dodecahedron;
+    pub use tetrahedron::Tetrahedron;
 }
 
 /// Common vertex position type.

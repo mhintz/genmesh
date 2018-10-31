@@ -4,48 +4,39 @@ use generators::{IndexedPolygon, SharedVertex};
 use {Triangle, Vertex};
 
 // from Paul Bourke: http://paulbourke.net/geometry/platonic/
-const VERTICES: [[f32; 3]; 4] = [
-    [1., 1., 1.],
-    [1., -1., -1.],
-    [-1., 1., -1.],
-    [-1., -1., 1.],
+const A: f32 = 1. / (2. * 1.4142135623730951);
+const B: f32 = 0.5;
+
+const VERTICES: [[f32; 3]; 6] = [
+    [-A, 0., A],
+    [A, 0., A],
+    [A, 0.,-A],
+    [-A, 0.,-A],
+    [0., B, 0.],
+    [0.,-B, 0.],
 ];
 
-const FACES: [[usize; 3]; 4] = [
-    [0, 2, 1],
-    [2, 3, 1],
-    [0, 1, 3],
-    [0, 3, 2],
+const FACES: [[usize; 3]; 8] = [
+    [3, 0, 4],
+    [2, 3, 4],
+    [1, 2, 4],
+    [0, 1, 4],
+    [3, 2, 5],
+    [0, 3, 5],
+    [2, 1, 5],
+    [1, 0, 5],
 ];
 
-// alternative tetrahedron vertices implementation from pex: http://vorg.github.io/pex/docs
-// const ROOT_3: f32 = 1.7320508075688772;  // 3 ^ 0.5
-// const ROOT_6: f32 = 2.449489742783178; // 6 ^ 0.5
-
-// const VERTICES: [[f32; 3]; 4] = [
-//     [ROOT_3 / 3., -ROOT_6 / 3. * 0.333 + ROOT_6 * 0.025, 0.],
-//     [-ROOT_3 / 6., -ROOT_6 / 3. * 0.333 + ROOT_6 * 0.025, 0.5],
-//     [-ROOT_3 / 6., -ROOT_6 / 3. * 0.333 + ROOT_6 * 0.025, -0.5],
-//     [0.,  ROOT_6 / 3. * 0.666 + ROOT_6 * 0.025, 0.],
-// ];
-
-// const FACES: [[usize; 3]; 4] = [
-//     [0, 1, 2],
-//     [3, 1, 0],
-//     [3, 0, 2],
-//     [3, 2, 1],
-// ];
-
-/// a platonic tetrahedron solid
-pub struct Tetrahedron {
-    i: usize
+/// a platonic octahedron solid
+pub struct Octahedron {
+    i: usize,
 }
 
-impl Tetrahedron {
-    /// create a simple tetrahedron with normalized vertices
+impl Octahedron {
+    /// create a simple octahedron with normalized vertices
     pub fn new() -> Self {
         Self {
-            i: 0
+            i: 0,
         }
     }
 
@@ -58,7 +49,7 @@ impl Tetrahedron {
     }
 }
 
-impl Iterator for Tetrahedron {
+impl Iterator for Octahedron {
     type Item = Triangle<Vertex>;
 
     fn size_hint(&self) -> (usize, Option<usize>) {
@@ -79,7 +70,7 @@ impl Iterator for Tetrahedron {
     }
 }
 
-impl SharedVertex<Vertex> for Tetrahedron {
+impl SharedVertex<Vertex> for Octahedron {
     fn shared_vertex_count(&self) -> usize {
         VERTICES.len()
     }
@@ -89,7 +80,7 @@ impl SharedVertex<Vertex> for Tetrahedron {
     }
 }
 
-impl IndexedPolygon<Triangle<usize>> for Tetrahedron {
+impl IndexedPolygon<Triangle<usize>> for Octahedron {
     fn indexed_polygon_count(&self) -> usize {
         FACES.len()
     }

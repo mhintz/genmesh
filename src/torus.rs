@@ -71,13 +71,15 @@ impl SharedVertex<Vertex> for Torus {
                 gamma * beta.cos(),
                 self.tubular_radius * alpha.sin(),
                 -gamma * beta.sin(),
-            ].into(),
+            ]
+            .into(),
             normal: Vector3::new(
                 alpha.cos() * beta.cos(),
                 alpha.sin(),
                 -alpha.cos() * beta.sin(),
-            ).normalize()
-                .into(),
+            )
+            .normalize()
+            .into(),
         }
     }
 

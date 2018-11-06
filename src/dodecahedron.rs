@@ -1,33 +1,33 @@
-use cgmath::{Vector3, InnerSpace};
+use cgmath::{InnerSpace, Vector3};
 
 use generators::{IndexedPolygon, SharedVertex};
-use {Polygon, Polygon::PolyNGon, NGon, Vertex};
+use {NGon, Polygon, Polygon::PolyNGon, Vertex};
 
 const PHI: f32 = 1.618033988749895; // (5 ^ 0.5 + 1) * 0.5
 const CONJPHI: f32 = 0.6180339887498948; // 1 / PHI
 
 // 20 vertices
 const VERTICES: [[f32; 3]; 20] = [
-  [-CONJPHI, -PHI, 0.], // v1
-  [CONJPHI, -PHI, 0.], // v2
-  [1., -1., 1.], // v3
-  [0., -CONJPHI, PHI], // v4
-  [-1., -1., 1.], // v5
-  [-PHI, 0., CONJPHI], // v6
-  [-1., -1., -1.], // v7
-  [1., -1., -1.], // v8
-  [PHI, 0., CONJPHI], // v9
-  [0., CONJPHI, PHI], // v10
-  [-1., 1., 1.], // v11.
-  [-PHI, 0., -CONJPHI], // v12
-  [0., -CONJPHI, -PHI], // v13
-  [PHI, 0., -CONJPHI], // v14
-  [1., 1., 1.], // v15
-  [CONJPHI, PHI, 0.], // v16
-  [-CONJPHI, PHI, 0.], // v17
-  [-1., 1., -1.], // v18
-  [0., CONJPHI, -PHI], // v19
-  [1., 1., -1.], // v20
+    [-CONJPHI, -PHI, 0.], // v1
+    [CONJPHI, -PHI, 0.],  // v2
+    [1., -1., 1.],        // v3
+    [0., -CONJPHI, PHI],  // v4
+    [-1., -1., 1.],       // v5
+    [-PHI, 0., CONJPHI],  // v6
+    [-1., -1., -1.],      // v7
+    [1., -1., -1.],       // v8
+    [PHI, 0., CONJPHI],   // v9
+    [0., CONJPHI, PHI],   // v10
+    [-1., 1., 1.],        // v11.
+    [-PHI, 0., -CONJPHI], // v12
+    [0., -CONJPHI, -PHI], // v13
+    [PHI, 0., -CONJPHI],  // v14
+    [1., 1., 1.],         // v15
+    [CONJPHI, PHI, 0.],   // v16
+    [-CONJPHI, PHI, 0.],  // v17
+    [-1., 1., -1.],       // v18
+    [0., CONJPHI, -PHI],  // v19
+    [1., 1., -1.],        // v20
 ];
 
 // 12 pentagonal faces
@@ -43,7 +43,7 @@ const FACES: [[usize; 5]; 12] = [
     [19, 15, 14, 8, 13],
     [15, 16, 10, 9, 14],
     [16, 17, 11, 5, 10],
-    [15, 19, 18, 17, 16]
+    [15, 19, 18, 17, 16],
 ];
 
 /// Platonic dodecahedron, made of pentagons
@@ -54,9 +54,7 @@ pub struct Dodecahedron {
 impl Dodecahedron {
     /// Create a unit Dodecahedron
     pub fn new() -> Self {
-        Self {
-            i: 0,
-        }
+        Self { i: 0 }
     }
 
     fn vert(&self, index: usize) -> Vertex {
@@ -124,4 +122,3 @@ impl IndexedPolygon<Polygon<usize>> for Dodecahedron {
         PolyNGon(result)
     }
 }
-

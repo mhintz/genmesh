@@ -1,7 +1,9 @@
 extern crate genmesh;
 
-use genmesh::{EmitTriangles, Indexer, LruIndexer, MapToVertices, Quad, Triangle, Triangulate,
-              Vertex, Vertices};
+use genmesh::{
+    EmitTriangles, Indexer, LruIndexer, MapToVertices, Quad, Triangle, Triangulate, Vertex,
+    Vertices,
+};
 
 use genmesh::generators::Plane;
 

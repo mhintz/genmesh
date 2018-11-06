@@ -46,7 +46,8 @@ impl Cone {
                         pos.cos() * FRAC_1_SQRT_2,
                         pos.sin() * FRAC_1_SQRT_2,
                         -FRAC_1_SQRT_2,
-                    ].into(),
+                    ]
+                    .into(),
                 }
             }
             VertexSection::TopRadius(i) => {
@@ -57,7 +58,8 @@ impl Cone {
                         pos.cos() * FRAC_1_SQRT_2,
                         pos.sin() * FRAC_1_SQRT_2,
                         -FRAC_1_SQRT_2,
-                    ].into(),
+                    ]
+                    .into(),
                 }
             }
             VertexSection::BottomRadius(i) => {

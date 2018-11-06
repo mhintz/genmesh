@@ -144,7 +144,7 @@ impl<T> EmitVertices<T> for Quad<T> {
     }
 }
 
-impl <T> EmitVertices<T> for NGon<T> {
+impl<T> EmitVertices<T> for NGon<T> {
     fn emit_vertices<F>(self, mut emit: F)
     where
         F: FnMut(T),
@@ -160,7 +160,7 @@ impl<T> EmitVertices<T> for Polygon<T> {
     where
         F: FnMut(T),
     {
-        use self::Polygon::{PolyQuad, PolyTri, PolyNGon};
+        use self::Polygon::{PolyNGon, PolyQuad, PolyTri};
 
         match self {
             PolyTri(p) => p.emit_vertices(emit),
@@ -175,19 +175,17 @@ pub struct VertexIterator<V> {
     buffer: VecDeque<V>,
 }
 
-impl <T> Polygon<T> {
+impl<T> Polygon<T> {
     /// extract vertices from the polygon directly, without requiring
     /// an iterator of polygons to transform into an iterator of vertices
     pub fn as_vertices(self) -> VertexIterator<T> {
         let mut buffer = VecDeque::new();
         self.emit_vertices(|v| buffer.push_back(v));
-        VertexIterator {
-            buffer: buffer
-        }
+        VertexIterator { buffer: buffer }
     }
 }
 
-impl <T> Iterator for VertexIterator<T> {
+impl<T> Iterator for VertexIterator<T> {
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
@@ -318,7 +316,7 @@ impl<T: Clone, U> MapVertex<T, U> for Polygon<T> {
     where
         F: FnMut(T) -> U,
     {
-        use self::Polygon::{PolyQuad, PolyTri, PolyNGon};
+        use self::Polygon::{PolyNGon, PolyQuad, PolyTri};
 
         match self {
             PolyTri(p) => PolyTri(p.map_vertex(map)),
@@ -453,7 +451,7 @@ impl<T: Clone> EmitLines for Polygon<T> {
     where
         E: FnMut(Line<T>),
     {
-        use self::Polygon::{PolyQuad, PolyTri, PolyNGon};
+        use self::Polygon::{PolyNGon, PolyQuad, PolyTri};
 
         match self {
             PolyTri(x) => x.emit_lines(emit),

@@ -1,22 +1,12 @@
-use cgmath::{Vector3, InnerSpace};
+use cgmath::{InnerSpace, Vector3};
 
 use generators::{IndexedPolygon, SharedVertex};
 use {Polygon, Polygon::PolyTri, Triangle, Vertex};
 
 // from Paul Bourke: http://paulbourke.net/geometry/platonic/
-const VERTICES: [[f32; 3]; 4] = [
-    [1., 1., 1.],
-    [1., -1., -1.],
-    [-1., 1., -1.],
-    [-1., -1., 1.],
-];
+const VERTICES: [[f32; 3]; 4] = [[1., 1., 1.], [1., -1., -1.], [-1., 1., -1.], [-1., -1., 1.]];
 
-const FACES: [[usize; 3]; 4] = [
-    [0, 2, 1],
-    [2, 3, 1],
-    [0, 1, 3],
-    [0, 3, 2],
-];
+const FACES: [[usize; 3]; 4] = [[0, 2, 1], [2, 3, 1], [0, 1, 3], [0, 3, 2]];
 
 // alternative tetrahedron vertices implementation from pex: http://vorg.github.io/pex/docs
 // const ROOT_3: f32 = 1.7320508075688772;  // 3 ^ 0.5
@@ -38,15 +28,13 @@ const FACES: [[usize; 3]; 4] = [
 
 /// a platonic tetrahedron solid
 pub struct Tetrahedron {
-    i: usize
+    i: usize,
 }
 
 impl Tetrahedron {
     /// create a simple tetrahedron with normalized vertices
     pub fn new() -> Self {
-        Self {
-            i: 0
-        }
+        Self { i: 0 }
     }
 
     fn vert(&self, idx: usize) -> Vertex {

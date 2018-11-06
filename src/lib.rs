@@ -17,10 +17,9 @@
 extern crate cgmath;
 extern crate mint;
 
-pub use poly::{Line, Polygon, Quad, Triangle, NGon,
-               EmitLines, Lines,
-               MapToVertices, MapVertex,
-               Vertices, VertexIterator, VertexStreamIterator
+pub use poly::{
+    EmitLines, Line, Lines, MapToVertices, MapVertex, NGon, Polygon, Quad, Triangle,
+    VertexIterator, VertexStreamIterator, Vertices,
 };
 
 pub use triangulate::{EmitTriangles, Triangulate, TriangulateIterator};
@@ -39,13 +38,13 @@ mod circle;
 mod cone;
 mod cube;
 mod cylinder;
+mod dodecahedron;
 mod icosphere;
+mod octahedron;
 mod plane;
 mod sphere;
-mod torus;
-mod dodecahedron;
 mod tetrahedron;
-mod octahedron;
+mod torus;
 
 /// A collection of utilties that can be used to build
 /// meshes programmatically.
@@ -54,14 +53,16 @@ pub mod generators {
     pub use cone::Cone;
     pub use cube::Cube;
     pub use cylinder::Cylinder;
-    pub use generator::{IndexedPolygon, IndexedPolygonIterator, SharedVertex, SharedVertexIterator};
+    pub use dodecahedron::Dodecahedron;
+    pub use generator::{
+        IndexedPolygon, IndexedPolygonIterator, SharedVertex, SharedVertexIterator,
+    };
     pub use icosphere::IcoSphere;
+    pub use octahedron::Octahedron;
     pub use plane::Plane;
     pub use sphere::SphereUv;
-    pub use torus::Torus;
-    pub use dodecahedron::Dodecahedron;
     pub use tetrahedron::Tetrahedron;
-    pub use octahedron::Octahedron;
+    pub use torus::Torus;
 }
 
 /// Common vertex position type.

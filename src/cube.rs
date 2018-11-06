@@ -1,8 +1,8 @@
-use cgmath::{Vector3, InnerSpace};
+use cgmath::{InnerSpace, Vector3};
 
 use super::generators::{IndexedPolygon, SharedVertex};
 use std::ops::Range;
-use {MapVertex, Polygon, Polygon::PolyQuad, Quad, Normal, Position, Vertex};
+use {MapVertex, Normal, Polygon, Polygon::PolyQuad, Position, Quad, Vertex};
 
 /// A perfect cube, centered at (0, 0, 0) with each face starting at 1/-1 away from the origin
 #[derive(Clone)]
@@ -80,7 +80,12 @@ impl SharedVertex<Vertex> for Cube {
 
 impl IndexedPolygon<Polygon<usize>> for Cube {
     fn indexed_polygon(&self, idx: usize) -> Polygon<usize> {
-        PolyQuad(Quad::new(idx * 4 + 0, idx * 4 + 1, idx * 4 + 2, idx * 4 + 3))
+        PolyQuad(Quad::new(
+            idx * 4 + 0,
+            idx * 4 + 1,
+            idx * 4 + 2,
+            idx * 4 + 3,
+        ))
     }
 
     fn indexed_polygon_count(&self) -> usize {

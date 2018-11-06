@@ -187,6 +187,10 @@ impl IndexedPolygon<Polygon<usize>> for IcoSphere {
     }
 
     fn indexed_polygon(&self, idx: usize) -> Polygon<usize> {
-        PolyTri(Triangle::new(self.faces[idx][0], self.faces[idx][1], self.faces[idx][2]))
+        PolyTri(Triangle::new(
+            self.faces[idx][0],
+            self.faces[idx][1],
+            self.faces[idx][2],
+        ))
     }
 }

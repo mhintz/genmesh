@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 
-use Polygon::{PolyQuad, PolyTri, PolyNGon};
-use {Polygon, Quad, Triangle, NGon};
+use Polygon::{PolyNGon, PolyQuad, PolyTri};
+use {NGon, Polygon, Quad, Triangle};
 
 /// provides a way to convert a polygon down to triangles
 pub trait EmitTriangles {

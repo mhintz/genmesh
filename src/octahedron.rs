@@ -1,4 +1,4 @@
-use cgmath::{Vector3, InnerSpace};
+use cgmath::{InnerSpace, Vector3};
 
 use generators::{IndexedPolygon, SharedVertex};
 use {Polygon, Polygon::PolyTri, Triangle, Vertex};
@@ -10,10 +10,10 @@ const B: f32 = 0.5;
 const VERTICES: [[f32; 3]; 6] = [
     [-A, 0., A],
     [A, 0., A],
-    [A, 0.,-A],
-    [-A, 0.,-A],
+    [A, 0., -A],
+    [-A, 0., -A],
     [0., B, 0.],
-    [0.,-B, 0.],
+    [0., -B, 0.],
 ];
 
 const FACES: [[usize; 3]; 8] = [
@@ -35,9 +35,7 @@ pub struct Octahedron {
 impl Octahedron {
     /// create a simple octahedron with normalized vertices
     pub fn new() -> Self {
-        Self {
-            i: 0,
-        }
+        Self { i: 0 }
     }
 
     fn vert(&self, idx: usize) -> Vertex {

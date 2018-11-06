@@ -20,7 +20,7 @@ extern crate mint;
 pub use poly::{Line, Polygon, Quad, Triangle, NGon,
                EmitLines, Lines,
                MapToVertices, MapVertex,
-               Vertices, VerticesIterator
+               Vertices, VertexIterator, VertexStreamIterator
 };
 
 pub use triangulate::{EmitTriangles, Triangulate, TriangulateIterator};

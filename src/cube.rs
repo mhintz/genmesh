@@ -1,9 +1,8 @@
 use cgmath::{Vector3, InnerSpace};
 
 use super::generators::{IndexedPolygon, SharedVertex};
-use super::{MapVertex, Quad};
 use std::ops::Range;
-use {Normal, Position, Vertex};
+use {MapVertex, Polygon, Polygon::PolyQuad, Quad, Normal, Position, Vertex};
 
 /// A perfect cube, centered at (0, 0, 0) with each face starting at 1/-1 away from the origin
 #[derive(Clone)]
@@ -37,19 +36,19 @@ impl Cube {
         }
     }
 
-    fn face(&self, idx: usize) -> Quad<Vertex> {
+    fn face(&self, idx: usize) -> Polygon<Vertex> {
         let (no, quad) = self.face_indexed(idx);
-        quad.map_vertex(|i| Vertex {
+        PolyQuad(quad.map_vertex(|i| Vertex {
             pos: self.vert(i),
             normal: no,
-        })
+        }))
     }
 }
 
 impl Iterator for Cube {
-    type Item = Quad<Vertex>;
+    type Item = Polygon<Vertex>;
 
-    fn next(&mut self) -> Option<Quad<Vertex>> {
+    fn next(&mut self) -> Option<Polygon<Vertex>> {
         self.range.next().map(|idx| self.face(idx))
     }
 
@@ -79,9 +78,9 @@ impl SharedVertex<Vertex> for Cube {
     }
 }
 
-impl IndexedPolygon<Quad<usize>> for Cube {
-    fn indexed_polygon(&self, idx: usize) -> Quad<usize> {
-        Quad::new(idx * 4 + 0, idx * 4 + 1, idx * 4 + 2, idx * 4 + 3)
+impl IndexedPolygon<Polygon<usize>> for Cube {
+    fn indexed_polygon(&self, idx: usize) -> Polygon<usize> {
+        PolyQuad(Quad::new(idx * 4 + 0, idx * 4 + 1, idx * 4 + 2, idx * 4 + 3))
     }
 
     fn indexed_polygon_count(&self) -> usize {

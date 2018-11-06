@@ -1,7 +1,7 @@
 use cgmath::{Vector3, InnerSpace};
 
 use generators::{IndexedPolygon, SharedVertex};
-use {Triangle, Vertex};
+use {Polygon, Polygon::PolyTri, Triangle, Vertex};
 
 // from Paul Bourke: http://paulbourke.net/geometry/platonic/
 const VERTICES: [[f32; 3]; 4] = [
@@ -59,7 +59,7 @@ impl Tetrahedron {
 }
 
 impl Iterator for Tetrahedron {
-    type Item = Triangle<Vertex>;
+    type Item = Polygon<Vertex>;
 
     fn size_hint(&self) -> (usize, Option<usize>) {
         (FACES.len(), Some(FACES.len()))
@@ -75,7 +75,7 @@ impl Iterator for Tetrahedron {
         let vb = self.vert(face[1]);
         let vc = self.vert(face[2]);
 
-        Some(Triangle::new(va, vb, vc))
+        Some(PolyTri(Triangle::new(va, vb, vc)))
     }
 }
 
@@ -89,13 +89,13 @@ impl SharedVertex<Vertex> for Tetrahedron {
     }
 }
 
-impl IndexedPolygon<Triangle<usize>> for Tetrahedron {
+impl IndexedPolygon<Polygon<usize>> for Tetrahedron {
     fn indexed_polygon_count(&self) -> usize {
         FACES.len()
     }
 
-    fn indexed_polygon(&self, idx: usize) -> Triangle<usize> {
+    fn indexed_polygon(&self, idx: usize) -> Polygon<usize> {
         let face = FACES[idx];
-        Triangle::new(face[0], face[1], face[2])
+        PolyTri(Triangle::new(face[0], face[1], face[2]))
     }
 }

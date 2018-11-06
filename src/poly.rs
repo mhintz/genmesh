@@ -170,31 +170,56 @@ impl<T> EmitVertices<T> for Polygon<T> {
     }
 }
 
+/// An iterator over vertices which have been extracted from a polygon
+pub struct VertexIterator<V> {
+    buffer: VecDeque<V>,
+}
+
+impl <T> Polygon<T> {
+    /// extract vertices from the polygon directly, without requiring
+    /// an iterator of polygons to transform into an iterator of vertices
+    pub fn as_vertices(self) -> VertexIterator<T> {
+        let mut buffer = VecDeque::new();
+        self.emit_vertices(|v| buffer.push_back(v));
+        VertexIterator {
+            buffer: buffer
+        }
+    }
+}
+
+impl <T> Iterator for VertexIterator<T> {
+    type Item = T;
+
+    fn next(&mut self) -> Option<T> {
+        self.buffer.pop_front()
+    }
+}
+
 /// Supplies a way to convert an iterator of polygons to an iterator
 /// of vertices. Useful for when you need to write the vertices into
 /// a graphics pipeline.
 pub trait Vertices<SRC, V> {
     /// Convert a polygon iterator to a vertices iterator.
-    fn vertices(self) -> VerticesIterator<SRC, V>;
+    fn vertices(self) -> VertexStreamIterator<SRC, V>;
 }
 
 impl<V, P: EmitVertices<V>, T: Iterator<Item = P>> Vertices<T, V> for T {
-    fn vertices(self) -> VerticesIterator<T, V> {
-        VerticesIterator {
+    fn vertices(self) -> VertexStreamIterator<T, V> {
+        VertexStreamIterator {
             source: self,
             buffer: VecDeque::new(),
         }
     }
 }
 
-/// an iterator that breaks a polygon down into its individual
-/// verticies.
-pub struct VerticesIterator<SRC, V> {
+/// an iterator that breaks an iterator of polygons down into
+/// an iterator of the individual verticies of those polygons
+pub struct VertexStreamIterator<SRC, V> {
     source: SRC,
     buffer: VecDeque<V>,
 }
 
-impl<V, U: EmitVertices<V>, SRC: Iterator<Item = U>> Iterator for VerticesIterator<SRC, V> {
+impl<V, U: EmitVertices<V>, SRC: Iterator<Item = U>> Iterator for VertexStreamIterator<SRC, V> {
     type Item = V;
 
     fn next(&mut self) -> Option<V> {

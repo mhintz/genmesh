@@ -1,7 +1,7 @@
 use cgmath::{Vector3, InnerSpace};
 
 use generators::{IndexedPolygon, SharedVertex};
-use {Triangle, Vertex};
+use {Polygon, Polygon::PolyTri, Triangle, Vertex};
 
 // from Paul Bourke: http://paulbourke.net/geometry/platonic/
 const A: f32 = 1. / (2. * 1.4142135623730951);
@@ -50,7 +50,7 @@ impl Octahedron {
 }
 
 impl Iterator for Octahedron {
-    type Item = Triangle<Vertex>;
+    type Item = Polygon<Vertex>;
 
     fn size_hint(&self) -> (usize, Option<usize>) {
         (FACES.len(), Some(FACES.len()))
@@ -66,7 +66,7 @@ impl Iterator for Octahedron {
         let vb = self.vert(face[1]);
         let vc = self.vert(face[2]);
 
-        Some(Triangle::new(va, vb, vc))
+        Some(PolyTri(Triangle::new(va, vb, vc)))
     }
 }
 
@@ -80,13 +80,13 @@ impl SharedVertex<Vertex> for Octahedron {
     }
 }
 
-impl IndexedPolygon<Triangle<usize>> for Octahedron {
+impl IndexedPolygon<Polygon<usize>> for Octahedron {
     fn indexed_polygon_count(&self) -> usize {
         FACES.len()
     }
 
-    fn indexed_polygon(&self, idx: usize) -> Triangle<usize> {
+    fn indexed_polygon(&self, idx: usize) -> Polygon<usize> {
         let face = FACES[idx];
-        Triangle::new(face[0], face[1], face[2])
+        PolyTri(Triangle::new(face[0], face[1], face[2]))
     }
 }

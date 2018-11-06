@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use cgmath::{InnerSpace, Vector3};
 
 use generators::{IndexedPolygon, SharedVertex};
-use {Triangle, Vertex};
+use {Polygon, Polygon::PolyTri, Triangle, Vertex};
 
 /// Icosahedral sphere with radius 1, centered at (0., 0., 0.)
 #[derive(Clone, Debug)]
@@ -150,7 +150,7 @@ fn new_point(start: [f32; 3], end: [f32; 3]) -> [f32; 3] {
 }
 
 impl Iterator for IcoSphere {
-    type Item = Triangle<Vertex>;
+    type Item = Polygon<Vertex>;
 
     fn size_hint(&self) -> (usize, Option<usize>) {
         (self.faces.len(), Some(self.faces.len()))
@@ -167,7 +167,7 @@ impl Iterator for IcoSphere {
         let z = self.vert(face[2]);
         self.i += 1;
 
-        Some(Triangle::new(x, y, z))
+        Some(PolyTri(Triangle::new(x, y, z)))
     }
 }
 
@@ -181,12 +181,12 @@ impl SharedVertex<Vertex> for IcoSphere {
     }
 }
 
-impl IndexedPolygon<Triangle<usize>> for IcoSphere {
+impl IndexedPolygon<Polygon<usize>> for IcoSphere {
     fn indexed_polygon_count(&self) -> usize {
         self.faces.len()
     }
 
-    fn indexed_polygon(&self, idx: usize) -> Triangle<usize> {
-        Triangle::new(self.faces[idx][0], self.faces[idx][1], self.faces[idx][2])
+    fn indexed_polygon(&self, idx: usize) -> Polygon<usize> {
+        PolyTri(Triangle::new(self.faces[idx][0], self.faces[idx][1], self.faces[idx][2]))
     }
 }

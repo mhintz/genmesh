@@ -1,7 +1,7 @@
 use cgmath::{Vector3, InnerSpace};
 
 use generators::{IndexedPolygon, SharedVertex};
-use {NGon, Vertex};
+use {Polygon, Polygon::PolyNGon, NGon, Vertex};
 
 const PHI: f32 = 1.618033988749895; // (5 ^ 0.5 + 1) * 0.5
 const CONJPHI: f32 = 0.6180339887498948; // 1 / PHI
@@ -71,7 +71,7 @@ impl Dodecahedron {
 }
 
 impl Iterator for Dodecahedron {
-    type Item = NGon<Vertex>;
+    type Item = Polygon<Vertex>;
 
     fn size_hint(&self) -> (usize, Option<usize>) {
         (FACES.len(), Some(FACES.len()))
@@ -92,7 +92,7 @@ impl Iterator for Dodecahedron {
         result.add_vertex(self.vert(face[4]));
         self.i += 1;
 
-        Some(result)
+        Some(PolyNGon(result))
     }
 }
 
@@ -106,12 +106,12 @@ impl SharedVertex<Vertex> for Dodecahedron {
     }
 }
 
-impl IndexedPolygon<NGon<usize>> for Dodecahedron {
+impl IndexedPolygon<Polygon<usize>> for Dodecahedron {
     fn indexed_polygon_count(&self) -> usize {
         FACES.len()
     }
 
-    fn indexed_polygon(&self, idx: usize) -> NGon<usize> {
+    fn indexed_polygon(&self, idx: usize) -> Polygon<usize> {
         let mut result = NGon::new();
 
         let face = FACES[idx];
@@ -121,7 +121,7 @@ impl IndexedPolygon<NGon<usize>> for Dodecahedron {
         result.add_vertex(face[3]);
         result.add_vertex(face[4]);
 
-        result
+        PolyNGon(result)
     }
 }
 

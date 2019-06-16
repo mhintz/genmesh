@@ -3,7 +3,8 @@ use std::f32::consts::PI;
 use cgmath::{InnerSpace, Vector3};
 
 use super::generators::{IndexedPolygon, SharedVertex};
-use super::{MapVertex, Quad, Vertex};
+use super::Polygon::PolyQuad;
+use super::{MapVertex, Polygon, Quad, Vertex};
 
 ///
 #[derive(Clone, Copy)]
@@ -40,7 +41,7 @@ impl Torus {
 }
 
 impl Iterator for Torus {
-    type Item = Quad<Vertex>;
+    type Item = Polygon<Vertex>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.idx < self.indexed_polygon_count() {
@@ -88,8 +89,8 @@ impl SharedVertex<Vertex> for Torus {
     }
 }
 
-impl IndexedPolygon<Quad<usize>> for Torus {
-    fn indexed_polygon(&self, idx: usize) -> Quad<usize> {
+impl IndexedPolygon<Polygon<usize>> for Torus {
+    fn indexed_polygon(&self, idx: usize) -> Polygon<usize> {
         // check for wrap around the end end
         let ncol = if self.indexed_polygon_count() - idx > self.tubular_segments {
             self.tubular_segments as isize
@@ -105,7 +106,9 @@ impl IndexedPolygon<Quad<usize>> for Torus {
         };
 
         let idx = idx as isize;
-        Quad::new(idx, idx + ncol, idx + nrow + ncol, idx + nrow).map_vertex(|x| x as usize)
+        PolyQuad(
+            Quad::new(idx, idx + ncol, idx + nrow + ncol, idx + nrow).map_vertex(|x| x as usize),
+        )
     }
 
     fn indexed_polygon_count(&self) -> usize {

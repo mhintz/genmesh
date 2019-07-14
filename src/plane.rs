@@ -1,5 +1,5 @@
 use super::generators::{IndexedPolygon, SharedVertex};
-use super::Quad;
+use super::{Polygon, Polygon::PolyQuad, Quad};
 use Vertex;
 
 /// Represents a 2D plane with origin of (0, 0), from 1 to -1
@@ -49,9 +49,9 @@ impl Plane {
 }
 
 impl Iterator for Plane {
-    type Item = Quad<Vertex>;
+    type Item = Polygon<Vertex>;
 
-    fn next(&mut self) -> Option<Quad<Vertex>> {
+    fn next(&mut self) -> Option<Polygon<Vertex>> {
         if self.x == self.subdivide_x {
             self.y += 1;
             if self.y >= self.subdivide_y {
@@ -66,7 +66,7 @@ impl Iterator for Plane {
         let w = self.vert(self.x, self.y + 1);
         self.x += 1;
 
-        Some(Quad::new(x, y, z, w))
+        Some(PolyQuad(Quad::new(x, y, z, w)))
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
@@ -88,18 +88,18 @@ impl SharedVertex<Vertex> for Plane {
     }
 }
 
-impl IndexedPolygon<Quad<usize>> for Plane {
-    fn indexed_polygon(&self, idx: usize) -> Quad<usize> {
+impl IndexedPolygon<Polygon<usize>> for Plane {
+    fn indexed_polygon(&self, idx: usize) -> Polygon<usize> {
         let y = idx / self.subdivide_x;
         let x = idx % self.subdivide_x;
         let base = y * (self.subdivide_x + 1) + x;
 
-        Quad::new(
+        PolyQuad(Quad::new(
             base,
             base + 1,
             base + self.subdivide_x + 2,
             base + self.subdivide_x + 1,
-        )
+        ))
     }
 
     fn indexed_polygon_count(&self) -> usize {

@@ -3,8 +3,7 @@ use std::f32::consts::PI;
 use cgmath::{InnerSpace, Vector3};
 
 use super::generators::{IndexedPolygon, SharedVertex};
-use super::Polygon::PolyQuad;
-use super::{MapVertex, Polygon, Quad, Vertex};
+use super::{MapVertex, Polygon, Polygon::PolyQuad, Quad, Vertex};
 
 ///
 #[derive(Clone, Copy)]

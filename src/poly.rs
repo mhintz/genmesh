@@ -86,7 +86,8 @@ impl<T> NGon<T> {
 }
 
 /// This is All-the-types container. This exists since some generators
-/// produce both `Triangles` and `Quads`.
+/// produce both `Triangles` and `Quads`, and also to make it possible
+/// to be type-generic over the kinds of primitives which generators return
 #[derive(Debug, Clone, PartialEq)]
 pub enum Polygon<T> {
     /// A wraped triangle

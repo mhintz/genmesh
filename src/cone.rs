@@ -1,7 +1,7 @@
 use std::f32::consts::{self, FRAC_1_SQRT_2};
 
 use super::generators::{IndexedPolygon, SharedVertex};
-use super::{MapVertex, Triangle, Vertex};
+use super::{MapVertex, Polygon, Polygon::PolyTri, Triangle, Vertex};
 
 const TWO_PI: f32 = consts::PI * 2.;
 
@@ -99,7 +99,7 @@ impl Cone {
 }
 
 impl Iterator for Cone {
-    type Item = Triangle<Vertex>;
+    type Item = Polygon<Vertex>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.u < self.sub_u * 2 {
@@ -129,25 +129,25 @@ impl SharedVertex<Vertex> for Cone {
     }
 }
 
-impl IndexedPolygon<Triangle<usize>> for Cone {
-    fn indexed_polygon(&self, idx: usize) -> Triangle<usize> {
+impl IndexedPolygon<Polygon<usize>> for Cone {
+    fn indexed_polygon(&self, idx: usize) -> Polygon<usize> {
         // top
         if idx < self.sub_u {
             let next = if idx != self.sub_u - 1 { idx + 1 } else { 0 };
-            Triangle::new(
+            PolyTri(Triangle::new(
                 self.index(VertexSection::Tip(idx)),
                 self.index(VertexSection::TopRadius(idx)),
                 self.index(VertexSection::TopRadius(next)),
-            )
+            ))
         // bottom
         } else {
             let idx = idx - self.sub_u;
             let next = if idx != self.sub_u - 1 { idx + 1 } else { 0 };
-            Triangle::new(
+            PolyTri(Triangle::new(
                 self.index(VertexSection::BottomCenter),
                 self.index(VertexSection::BottomRadius(next)),
                 self.index(VertexSection::BottomRadius(idx)),
-            )
+            ))
         }
     }
 

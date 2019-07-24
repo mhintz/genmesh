@@ -1,7 +1,7 @@
 use cgmath::{InnerSpace, Vector3};
 
-use generators::{IndexedPolygon, SharedVertex};
-use {Polygon, Polygon::PolyTri, Triangle, Vertex};
+use crate::generators::{IndexedPolygon, SharedVertex};
+use crate::{Polygon, Polygon::PolyTri, Triangle, Vertex};
 
 // from Paul Bourke: http://paulbourke.net/geometry/platonic/
 const A: f32 = 1. / (2. * 1.4142135623730951);

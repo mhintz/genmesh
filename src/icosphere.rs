@@ -4,8 +4,8 @@ use std::collections::HashMap;
 
 use cgmath::{InnerSpace, Vector3};
 
-use generators::{IndexedPolygon, SharedVertex};
-use {Polygon, Polygon::PolyTri, Triangle, Vertex};
+use crate::generators::{IndexedPolygon, SharedVertex};
+use crate::{Polygon, Polygon::PolyTri, Triangle, Vertex};
 
 /// Icosahedral sphere with radius 1, centered at (0., 0., 0.)
 #[derive(Clone, Debug)]

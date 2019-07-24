@@ -1,6 +1,6 @@
 use super::generators::{IndexedPolygon, SharedVertex};
 use super::{Polygon, Polygon::PolyQuad, Quad};
-use Vertex;
+use crate::Vertex;
 
 /// Represents a 2D plane with origin of (0, 0), from 1 to -1
 #[derive(Clone, Copy)]

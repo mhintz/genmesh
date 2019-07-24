@@ -2,7 +2,7 @@ use cgmath::{InnerSpace, Vector3};
 
 use super::generators::{IndexedPolygon, SharedVertex};
 use std::ops::Range;
-use {MapVertex, Normal, Polygon, Polygon::PolyQuad, Position, Quad, Vertex};
+use crate::{MapVertex, Normal, Polygon, Polygon::PolyQuad, Position, Quad, Vertex};
 
 /// A perfect cube, centered at (0, 0, 0) with each face starting at 1/-1 away from the origin
 #[derive(Clone)]

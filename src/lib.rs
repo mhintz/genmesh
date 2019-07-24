@@ -17,16 +17,16 @@
 extern crate cgmath;
 extern crate mint;
 
-pub use poly::{
+pub use crate::poly::{
     EmitLines, Line, Lines, MapToVertices, MapVertex, NGon, Polygon, Quad, Triangle,
     VertexIterator, VertexStreamIterator, Vertices,
 };
 
-pub use triangulate::{EmitTriangles, Triangulate, TriangulateIterator};
+pub use crate::triangulate::{EmitTriangles, Triangulate, TriangulateIterator};
 
-pub use indexer::{Indexer, LruIndexer};
+pub use crate::indexer::{Indexer, LruIndexer};
 
-pub use neighbors::Neighbors;
+pub use crate::neighbors::Neighbors;
 
 mod generator;
 mod indexer;
@@ -49,20 +49,20 @@ mod torus;
 /// A collection of utilties that can be used to build
 /// meshes programmatically.
 pub mod generators {
-    pub use circle::Circle;
-    pub use cone::Cone;
-    pub use cube::Cube;
-    pub use cylinder::Cylinder;
-    pub use dodecahedron::Dodecahedron;
-    pub use generator::{
+    pub use crate::circle::Circle;
+    pub use crate::cone::Cone;
+    pub use crate::cube::Cube;
+    pub use crate::cylinder::Cylinder;
+    pub use crate::dodecahedron::Dodecahedron;
+    pub use crate::generator::{
         IndexedPolygon, IndexedPolygonIterator, SharedVertex, SharedVertexIterator,
     };
-    pub use icosphere::IcoSphere;
-    pub use octahedron::Octahedron;
-    pub use plane::Plane;
-    pub use sphere::SphereUv;
-    pub use tetrahedron::Tetrahedron;
-    pub use torus::Torus;
+    pub use crate::icosphere::IcoSphere;
+    pub use crate::octahedron::Octahedron;
+    pub use crate::plane::Plane;
+    pub use crate::sphere::SphereUv;
+    pub use crate::tetrahedron::Tetrahedron;
+    pub use crate::torus::Torus;
 }
 
 /// Common vertex position type.

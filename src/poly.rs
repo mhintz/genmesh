@@ -104,7 +104,7 @@ pub trait EmitVertices<T> {
     /// Consume a polygon, each
     /// vertex is emitted to the parent function by calling the supplied
     /// lambda function
-    fn emit_vertices<F>(self, F)
+    fn emit_vertices<F>(self, _: F)
     where
         F: FnMut(T);
 }
@@ -242,7 +242,7 @@ pub trait MapVertex<T, U> {
     /// It's internal values should reflect any transformation the map did.
     type Output;
     /// map a function to each vertex in polygon creating a new polygon
-    fn map_vertex<F>(self, F) -> Self::Output
+    fn map_vertex<F>(self, _: F) -> Self::Output
     where
         F: FnMut(T) -> U;
 }

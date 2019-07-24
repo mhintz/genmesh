@@ -1,7 +1,7 @@
 use cgmath::{InnerSpace, Vector3};
 
-use generators::{IndexedPolygon, SharedVertex};
-use {NGon, Polygon, Polygon::PolyNGon, Vertex};
+use crate::generators::{IndexedPolygon, SharedVertex};
+use crate::{NGon, Polygon, Polygon::PolyNGon, Vertex};
 
 const PHI: f32 = 1.618033988749895; // (5 ^ 0.5 + 1) * 0.5
 const CONJPHI: f32 = 0.6180339887498948; // 1 / PHI

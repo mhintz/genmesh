@@ -1,7 +1,7 @@
 use cgmath::{InnerSpace, Vector3};
 
-use generators::{IndexedPolygon, SharedVertex};
-use {Polygon, Polygon::PolyTri, Triangle, Vertex};
+use crate::generators::{IndexedPolygon, SharedVertex};
+use crate::{Polygon, Polygon::PolyTri, Triangle, Vertex};
 
 // from Paul Bourke: http://paulbourke.net/geometry/platonic/
 const VERTICES: [[f32; 3]; 4] = [[1., 1., 1.], [1., -1., -1.], [-1., 1., -1.], [-1., -1., 1.]];

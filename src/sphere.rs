@@ -2,7 +2,7 @@ use super::generators::{IndexedPolygon, SharedVertex};
 use super::Polygon::{PolyQuad, PolyTri};
 use super::{Polygon, Quad, Triangle};
 use std::f32::consts::PI;
-use Vertex;
+use crate::Vertex;
 
 /// Represents a sphere with radius of 1, centered at (0, 0, 0)
 #[derive(Clone, Copy)]

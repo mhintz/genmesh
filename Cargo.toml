@@ -4,7 +4,9 @@ version = "0.6.2"
 authors = [
     "Coraline Sherratt <cora.sherratt@gmail.com>",
     "Dzmitry Malyshau <kvarkus@gmail.com>",
+    "Mark Hintz"
 ]
+edition = "2018"
 
 license = "Apache-2.0"
 description = "A package for generating 3D meshes"

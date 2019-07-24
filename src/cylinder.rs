@@ -1,7 +1,7 @@
 use super::generators::{IndexedPolygon, SharedVertex};
 use super::{Polygon, Quad, Triangle};
-use std::f32::consts::PI;
 use crate::{Normal, Position, Vertex};
+use std::f32::consts::PI;
 
 /// Represents a cylinder with radius of 1, height of 2,
 /// and centered at (0, 0, 0) pointing up (to 0, 0, 1).

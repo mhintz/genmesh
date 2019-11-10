@@ -11,7 +11,7 @@ edition = "2018"
 license = "Apache-2.0"
 description = "A package for generating 3D meshes"
 homepage = "https://github.com/gfx-rs/genmesh"
-repository = "https://github.com/gfx-rs/genmesh"
+repository = "https://github.com/mhintz/genmesh"
 
 [lib]
 name = "genmesh"
